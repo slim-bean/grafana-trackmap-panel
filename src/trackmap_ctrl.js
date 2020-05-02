@@ -307,29 +307,54 @@ export class TrackMapCtrl extends MetricsPanelCtrl {
   onDataReceived(data) {
     log("onDataReceived");
     this.setupMap();
+    console.log(data)
 
-    if (data.length === 0 || data.length !== 2) {
-      // No data or incorrect data, show a world map and abort
-      this.leafMap.setView([0, 0], 1);
-      return;
-    }
+    // if (data.length === 0 || data.length !== 2) {
+    //   // No data or incorrect data, show a world map and abort
+    //   this.leafMap.setView([0, 0], 1);
+    //   return;
+    // }
 
-    // Asumption is that there are an equal number of properly matched timestamps
-    // TODO: proper joining by timestamp?
     this.coords.length = 0;
-    const lats = data[0].datapoints;
-    const lons = data[1].datapoints;
-    for (let i = 0; i < lats.length; i++) {
-      if (lats[i][0] == null || lons[i][0] == null ||
-          lats[i][1] !== lons[i][1]) {
-        continue;
-      }
 
+    let rows = data[0].rows;
+    rows.reverse();
+
+    for (let i = 0; i < rows.length; i++){
+      const ll = rows[i][1].split(",");
+      const ts = rows[i][0];
+      const lat = ll[0];
+      const lon = ll[1];
+      let latD = Math.trunc(lat/100);
+      let lonD = Math.trunc(lon/100);
+      latD = latD + ((lat - latD*100)/60);
+      lonD = lonD + ((lon - lonD*100)/60);
+      lonD = -lonD;
+      //console.log("lat: " + latD + " lon: " + lonD)
+      //console.log("Time: " + )
       this.coords.push({
-        position: L.latLng(lats[i][0], lons[i][0]),
-        timestamp: lats[i][1]
+        position: L.latLng(latD, lonD),
+        timestamp: Date.parse(ts)
       });
+
     }
+
+    // // Asumption is that there are an equal number of properly matched timestamps
+    // // TODO: proper joining by timestamp?
+    // this.coords.length = 0;
+    // const lats = data[0].datapoints;
+    // const lons = data[1].datapoints;
+    // for (let i = 0; i < lats.length; i++) {
+    //   if (lats[i][0] == null || lons[i][0] == null ||
+    //       lats[i][1] !== lons[i][1]) {
+    //     continue;
+    //   }
+    //
+    //   this.coords.push({
+    //     position: L.latLng(lats[i][0], lons[i][0]),
+    //     timestamp: lats[i][1]
+    //   });
+    // }
     this.addDataToMap();
   }
 
