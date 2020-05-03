@@ -325,15 +325,15 @@ export class TrackMapCtrl extends MetricsPanelCtrl {
       const ts = rows[i][0];
       const lat = ll[0];
       const lon = ll[1];
-      let latD = Math.trunc(lat/100);
-      let lonD = Math.trunc(lon/100);
-      latD = latD + ((lat - latD*100)/60);
-      lonD = lonD + ((lon - lonD*100)/60);
-      lonD = -lonD;
+      // let latD = Math.trunc(lat/100);
+      // let lonD = Math.trunc(lon/100);
+      // latD = latD + ((lat - latD*100)/60);
+      // lonD = lonD + ((lon - lonD*100)/60);
+      // lonD = -lonD;
       //console.log("lat: " + latD + " lon: " + lonD)
       //console.log("Time: " + )
       this.coords.push({
-        position: L.latLng(latD, lonD),
+        position: L.latLng(lat, lon),
         timestamp: Date.parse(ts)
       });
 
