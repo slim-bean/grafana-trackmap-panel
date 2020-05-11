@@ -318,7 +318,7 @@ export class TrackMapCtrl extends MetricsPanelCtrl {
     this.coords.length = 0;
 
     let rows = data[0].rows;
-    rows.reverse();
+    //rows.reverse();
 
     for (let i = 0; i < rows.length; i++){
       const ll = rows[i][1].split(",");
